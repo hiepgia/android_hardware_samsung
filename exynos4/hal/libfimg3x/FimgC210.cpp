@@ -70,7 +70,7 @@ FimgApi * FimgC210::CreateInstance()
 
         if(m_ptrFimgApiList[i]->FlagCreate() == false) {
             if(m_ptrFimgApiList[i]->Create() == false) {
-                PRINT("%s::Create(%d) fail\n", __func__, i);
+                ALOG("%s::Create(%d) fail\n", __func__, i);
                 goto CreateInstance_End;
             }
             else
@@ -100,7 +100,7 @@ void FimgC210::DestroyInstance(FimgApi * ptrFimgApi)
            && m_ptrFimgApiList[i] == ptrFimgApi) {
             if(m_ptrFimgApiList[i]->FlagCreate() == true
                && m_ptrFimgApiList[i]->Destroy() == false) {
-                PRINT("%s::Destroy() fail\n", __func__);
+                ALOG("%s::Destroy() fail\n", __func__);
             } else {
                 FimgC210 * tempFimgC210 =  (FimgC210 *)m_ptrFimgApiList[i];
                 delete tempFimgC210;
@@ -122,7 +122,7 @@ void FimgC210::DestroyAllInstance(void)
         if(m_ptrFimgApiList[i] != NULL) {
             if(m_ptrFimgApiList[i]->FlagCreate() == true
                && m_ptrFimgApiList[i]->Destroy() == false) {
-                    PRINT("%s::Destroy() fail\n", __func__);
+                    ALOG("%s::Destroy() fail\n", __func__);
             } else {
                 FimgC210 * tempFimgC210 =  (FimgC210 *)m_ptrFimgApiList[i];
                 delete tempFimgC210;
@@ -138,10 +138,10 @@ bool FimgC210::t_Create(void)
     bool ret = true;
 
     if(m_CreateG2D() == false) {
-        PRINT("%s::m_CreateG2D() fail \n", __func__);
+        ALOG("%s::m_CreateG2D() fail \n", __func__);
 
         if(m_DestroyG2D() == false)
-            PRINT("%s::m_DestroyG2D() fail \n", __func__);
+            ALOG("%s::m_DestroyG2D() fail \n", __func__);
 
         ret = false;
     }
@@ -154,7 +154,7 @@ bool FimgC210::t_Destroy(void)
     bool ret = true;
 
     if(m_DestroyG2D() == false) {
-        PRINT("%s::m_DestroyG2D() fail \n", __func__);
+        ALOG("%s::m_DestroyG2D() fail \n", __func__);
         ret = false;
     }
 
@@ -178,7 +178,7 @@ bool FimgC210::t_Stretch(FimgRect * src, FimgRect * dst, FimgClip * clip, FimgFl
 #ifdef G2D_NONE_BLOCKING_MODE
     if(m_PollG2D(&m_g2dPoll) == false)
     {
-        PRINT("%s::m_PollG2D() fail\n", __func__);
+        ALOG("%s::m_PollG2D() fail\n", __func__);
         goto STRETCH_FAIL;
     }
 #endif
@@ -198,13 +198,13 @@ bool FimgC210::t_Sync(void)
 {
 #if 0
     if(ioctl(m_g2dFd, G2D_SYNC) < 0) {
-        PRINT("%s::G2D_Sync fail\n", __func__);
+        ALOG("%s::G2D_Sync fail\n", __func__);
         goto SYNC_FAIL;
     }
 #else
     if(m_PollG2D(&m_g2dPoll) == false)
     {
-        PRINT("%s::m_PollG2D() fail\n", __func__);
+        ALOG("%s::m_PollG2D() fail\n", __func__);
         goto SYNC_FAIL;
     }
 #endif
@@ -232,7 +232,7 @@ bool FimgC210::m_CreateG2D(void)
     void * mmap_base;
 
     if(m_g2dFd != 0) {
-        PRINT("%s::m_g2dFd(%d) is not 0 fail\n", __func__, m_g2dFd);
+        ALOG("%s::m_g2dFd(%d) is not 0 fail\n", __func__, m_g2dFd);
         return false;
     }
 
@@ -242,7 +242,7 @@ bool FimgC210::m_CreateG2D(void)
     m_g2dFd = open(SEC_G2D_DEV_NAME, O_RDWR);
 #endif
     if(m_g2dFd < 0) {
-        PRINT("%s::open(%s) fail(%s)\n", __func__, SEC_G2D_DEV_NAME, strerror(errno));
+        ALOG("%s::open(%s) fail(%s)\n", __func__, SEC_G2D_DEV_NAME, strerror(errno));
         m_g2dFd = 0;
         return false;
     }
@@ -283,27 +283,27 @@ bool FimgC210::m_DoG2D(FimgRect * src, FimgRect * dst, FimgClip * clip, FimgFlag
     if(ioctl(m_g2dFd, G2D_BLIT, &params) < 0) {
         #if 0
         {
-            PRINT("---------------------------------------\n");
-            PRINT("src.color_format : %d \n", src->color_format);
-            PRINT("src.full_w       : %d \n", src->full_w);
-            PRINT("src.full_h       : %d \n", src->full_h);
-            PRINT("src.x            : %d \n", src->x);
-            PRINT("src.y            : %d \n", src->y);
-            PRINT("src.w            : %d \n", src->w);
-            PRINT("src.h            : %d \n", src->h);
+            ALOG("---------------------------------------\n");
+            ALOG("src.color_format : %d \n", src->color_format);
+            ALOG("src.full_w       : %d \n", src->full_w);
+            ALOG("src.full_h       : %d \n", src->full_h);
+            ALOG("src.x            : %d \n", src->x);
+            ALOG("src.y            : %d \n", src->y);
+            ALOG("src.w            : %d \n", src->w);
+            ALOG("src.h            : %d \n", src->h);
 
-            PRINT("dst.color_format : %d \n", dst->color_format);
-            PRINT("dst.full_w       : %d \n", dst->full_w);
-            PRINT("dst.full_h       : %d \n", dst->full_h);
-            PRINT("dst.x            : %d \n", dst->x);
-            PRINT("dst.y            : %d \n", dst->y);
-            PRINT("dst.w            : %d \n", dst->w);
-            PRINT("dst.h            : %d \n", dst->h);
+            ALOG("dst.color_format : %d \n", dst->color_format);
+            ALOG("dst.full_w       : %d \n", dst->full_w);
+            ALOG("dst.full_h       : %d \n", dst->full_h);
+            ALOG("dst.x            : %d \n", dst->x);
+            ALOG("dst.y            : %d \n", dst->y);
+            ALOG("dst.w            : %d \n", dst->w);
+            ALOG("dst.h            : %d \n", dst->h);
 
-            PRINT("flag.rotate_val  : %d \n", flag->rotate_val);
-            PRINT("flag.alpha_val   : %d(%d) \n", flag->alpha_val);
-            PRINT("flag.color_key_mode  : %d(%d) \n", flag->color_key_mode, flag->color_key_val);
-            PRINT("---------------------------------------\n");
+            ALOG("flag.rotate_val  : %d \n", flag->rotate_val);
+            ALOG("flag.alpha_val   : %d(%d) \n", flag->alpha_val);
+            ALOG("flag.color_key_mode  : %d(%d) \n", flag->color_key_mode, flag->color_key_val);
+            ALOG("---------------------------------------\n");
         }
         #endif
 
@@ -323,16 +323,16 @@ inline bool FimgC210::m_PollG2D(struct pollfd * events)
 
     if (ret < 0) {
         if(ioctl(m_g2dFd, G2D_RESET) < 0) {
-	     PRINT("%s::G2D_RESET fail\n", __func__);
+	     ALOG("%s::G2D_RESET fail\n", __func__);
         }
-        PRINT("%s::poll fail \n", __func__);
+        ALOG("%s::poll fail \n", __func__);
         return false;
     }
     else if (ret == 0) {
         if(ioctl(m_g2dFd, G2D_RESET) < 0) {
-	     PRINT("%s::G2D_RESET fail\n", __func__);
+	     ALOG("%s::G2D_RESET fail\n", __func__);
         }
-        PRINT("%s::No data in %d milli secs..\n", __func__, G2D_POLL_TIME);
+        ALOG("%s::No data in %d milli secs..\n", __func__, G2D_POLL_TIME);
         return false;
     }
 
@@ -344,7 +344,7 @@ inline bool FimgC210::m_CleanG2D(unsigned int virtAddr, unsigned int size)
     g2d_dma_info dma_info = { virtAddr, size };
 
     if(ioctl(m_g2dFd, G2D_DMA_CACHE_CLEAN, &dma_info) < 0) {
-        PRINT("%s::G2D_DMA_CACHE_CLEAN(%d, %d) fail\n", __func__, virtAddr, size);
+        ALOG("%s::G2D_DMA_CACHE_CLEAN(%d, %d) fail\n", __func__, virtAddr, size);
         return false;
     }
     return true;
@@ -355,7 +355,7 @@ inline bool FimgC210::m_FlushG2D  (unsigned int virtAddr, unsigned int size)
     g2d_dma_info dma_info = { virtAddr, size };
 
     if(ioctl(m_g2dFd, G2D_DMA_CACHE_FLUSH, &dma_info) < 0) {
-        PRINT("%s::G2D_DMA_CACHE_FLUSH(%d, %d) fail\n", __func__, virtAddr, size);
+        ALOG("%s::G2D_DMA_CACHE_FLUSH(%d, %d) fail\n", __func__, virtAddr, size);
         return false;
     }
     return true;
@@ -421,8 +421,8 @@ void FimgC210::m_PrintFimgC210Performance(FimgRect *   src,
 
 #ifdef CHECK_FIMGC210_CRITICAL_PERFORMANCE
 #else
-    PRINT("===============================================\n");
-    PRINT("src[%3d, %3d | %10s] -> dst[%3d, %3d | %10s]\n",
+    ALOG("===============================================\n");
+    ALOG("src[%3d, %3d | %10s] -> dst[%3d, %3d | %10s]\n",
           src->w, src->h, srcColorFormat,
           dst->w, dst->h, dstColorFormat);
 #endif
@@ -441,12 +441,12 @@ void FimgC210::m_PrintFimgC210Performance(FimgRect *   src,
         if(1500 < (sectionTime / 1000)) // check 1.5 mille second..
 #endif
         {
-            PRINT("===============================================\n");
-            PRINT("src[%3d, %3d | %10s] -> dst[%3d, %3d | %10s]\n",
+            ALOG("===============================================\n");
+            ALOG("src[%3d, %3d | %10s] -> dst[%3d, %3d | %10s]\n",
                    src->w, src->h, srcColorFormat,
                    dst->w, dst->h, dstColorFormat);
 
-            PRINT("%20s : %5lld msec(%5.2f %%)\n",
+            ALOG("%20s : %5lld msec(%5.2f %%)\n",
               stopWatchName[i],
               sectionTime / 1000,
               ((float)sectionTime / (float)totalTime) * 100.0f);
