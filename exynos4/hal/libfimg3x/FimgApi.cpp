@@ -50,7 +50,7 @@ FimgApi::FimgApi()
 FimgApi::~FimgApi()
 {
     if(m_flagCreate == true)
-        PRINT("%s::this is not Destroyed fail \n", __func__);
+        ALOG("%s::this is not Destroyed fail \n", __func__);
 }
 
 bool FimgApi::Create(void)
@@ -58,17 +58,17 @@ bool FimgApi::Create(void)
     bool ret = false;
 
     if(t_Lock() == false) {
-        PRINT("%s::t_Lock() fail \n", __func__);
+        ALOG("%s::t_Lock() fail \n", __func__);
         goto CREATE_DONE;
     }
 
     if(m_flagCreate == true) {
-        PRINT("%s::Already Created fail \n", __func__);
+        ALOG("%s::Already Created fail \n", __func__);
         goto CREATE_DONE;
     }
 
     if(t_Create() == false) {
-        PRINT("%s::t_Create() fail \n", __func__);
+        ALOG("%s::t_Create() fail \n", __func__);
         goto CREATE_DONE;
     }
 
@@ -88,17 +88,17 @@ bool FimgApi::Destroy(void)
     bool ret = false;
 
     if(t_Lock() == false) {
-        PRINT("%s::t_Lock() fail \n", __func__);
+        ALOG("%s::t_Lock() fail \n", __func__);
         goto DESTROY_DONE;
     }
 
     if(m_flagCreate == false) {
-        PRINT("%s::Already Destroyed fail \n", __func__);
+        ALOG("%s::Already Destroyed fail \n", __func__);
         goto DESTROY_DONE;
     }
 
     if(t_Destroy() == false) {
-        PRINT("%s::t_Destroy() fail \n", __func__);
+        ALOG("%s::t_Destroy() fail \n", __func__);
         goto DESTROY_DONE;
     }
 
@@ -118,12 +118,12 @@ bool FimgApi::Stretch(FimgRect * src, FimgRect * dst, FimgClip *clip, FimgFlag *
     bool ret = false;
 
     if(t_Lock() == false) {
-        PRINT("%s::t_Lock() fail \n", __func__);
+        ALOG("%s::t_Lock() fail \n", __func__);
         goto STRETCH_DONE;
     }
 
     if(m_flagCreate == false) {
-        PRINT("%s::This is not Created fail \n", __func__);
+        ALOG("%s::This is not Created fail \n", __func__);
         goto STRETCH_DONE;
     }
 
@@ -145,7 +145,7 @@ bool FimgApi::Sync(void)
     bool ret = false;
 
     if(m_flagCreate == false) {
-        PRINT("%s::This is not Created fail \n", __func__);
+        ALOG("%s::This is not Created fail \n", __func__);
         goto SYNC_DONE;
     }
 
@@ -162,37 +162,37 @@ SYNC_DONE :
 
 bool FimgApi::t_Create(void)
 {
-    PRINT("%s::This is empty virtual function fail\n", __func__);
+    ALOG("%s::This is empty virtual function fail\n", __func__);
     return false;
 }
 
 bool FimgApi::t_Destroy(void)
 {
-    PRINT("%s::This is empty virtual function fail\n", __func__);
+    ALOG("%s::This is empty virtual function fail\n", __func__);
     return false;
 }
 
 bool FimgApi::t_Stretch(FimgRect * src, FimgRect * dst, FimgClip * clip, FimgFlag * flag)
 {
-    PRINT("%s::This is empty virtual function fail\n", __func__);
+    ALOG("%s::This is empty virtual function fail\n", __func__);
     return false;
 }
 
 bool FimgApi::t_Sync(void)
 {
-    PRINT("%s::This is empty virtual function fail\n", __func__);
+    ALOG("%s::This is empty virtual function fail\n", __func__);
     return false;
 }
 
 bool FimgApi::t_Lock(void)
 {
-    PRINT("%s::This is empty virtual function fail\n", __func__);
+    ALOG("%s::This is empty virtual function fail\n", __func__);
     return false;
 }
 
 bool FimgApi::t_UnLock(void)
 {
-    PRINT("%s::This is empty virtual function fail\n", __func__);
+    ALOG("%s::This is empty virtual function fail\n", __func__);
     return false;
 }
 
@@ -205,7 +205,7 @@ extern "C" int stretchFimgApi(FimgRect * src, FimgRect * dst, FimgClip * clip, F
     FimgApi * fimgApi = createFimgApi();
 
     if(fimgApi == NULL) {
-        PRINT("%s::createFimgApi() fail \n", __func__);
+        ALOG("%s::createFimgApi() fail \n", __func__);
         return -1;
     }
 
@@ -226,7 +226,7 @@ extern "C" int SyncFimgApi(void)
 {
     FimgApi * fimgApi = createFimgApi();
     if(fimgApi == NULL) {
-        PRINT("%s::createFimgApi() fail \n", __func__);
+        ALOG("%s::createFimgApi() fail \n", __func__);
         return -1;
     }
 
